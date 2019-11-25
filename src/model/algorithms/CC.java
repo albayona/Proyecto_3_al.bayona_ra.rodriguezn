@@ -4,6 +4,7 @@ import api.IVertice;
 import model.data_structures.HashTables.HashTable;
 import model.data_structures.grafo1.Grafo;
 import model.data_structures.grafo1.VerticeNoExisteException;
+import model.data_structures.listas.LinkedList;
 
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -20,10 +21,10 @@ public class CC
 
         HashTable vertices = G.getVertices();
 
-        Iterator iter = (Iterator) vertices.valuesIterator().iterator();
+       LinkedList listavertices =  vertices.valuesIterator();
 
-        while (iter.hasNext()) {
-            IVertice temp = (IVertice) iter.next();
+        for (Object v: listavertices) {
+            IVertice temp = (IVertice) v;
 
             if (!marked[(int) temp.darId()]) {
                 dfs(G, temp);
@@ -32,20 +33,20 @@ public class CC
         }
     }
 
-    private void dfs(Grafo G, IVertice v)  {
+    private void dfs(Grafo G, IVertice v) throws VerticeNoExisteException {
         marked[(int) v.darId()] = true;
         id[(int) v.darId()] = count;
-        IVertice w = null;
-        try {
-        for (int i = 0; i < G.adjVertexes(v).getSize(); i++) {
 
-                w = (IVertice) G.adjVertexes(v).getElement(i);
+        LinkedList<IVertice> adjs = G.adjVertexes(v.darId());
+        if (adjs != null) {
+            for (IVertice w : adjs) {
+
                 if (!marked[(int) w.darId()])
                     dfs(G, w);
             }
         }
-                    catch (VerticeNoExisteException e){
-        }
+
+
     }
 
 
