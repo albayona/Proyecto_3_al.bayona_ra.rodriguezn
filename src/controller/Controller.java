@@ -4,7 +4,6 @@ import api.IVertice;
 import model.algorithms.CC;
 
 import model.data_structures.HashTables.HashTable;
-import model.data_structures.MaxHeap;
 import model.data_structures.grafo1.Grafo;
 import model.data_structures.grafo1.MaxPQ;
 import model.data_structures.grafo1.VerticeNoExisteException;
@@ -12,9 +11,6 @@ import model.logic.TripsManager;
 import model.vo.TripleCost;
 
 import model.data_structures.HashTables.HashTable;
-
-import java.util.Comparator;
-import java.util.Iterator;
 
 
 public class Controller {
@@ -70,37 +66,29 @@ public class Controller {
 
 				int v = table.get(t);
 				v++;
+				System.out.print(v);
 				table.put(t,v);
 
 			}
 		}
 
-		MaxHeap<Integer> pq = new MaxHeap(new comp());
+		MaxPQ<Integer>  pq = new MaxPQ<>();
 
-		String res= "";
-
-		int i = 0;
-		for (Iterator<Integer> it = table.keysIterator(); it.hasNext() && i < 5; ) {
-			Integer key = it.next();
-
-			Integer temp = table.get(key);
-
-			res = res +  temp + "\n";
-			i++;
+		for (Integer c: table.valuesIterator()){
+			
+			pq.insert(c);
 		}
 
+		String res ="";
+
+		for (int i = 0; i < 5; i++){
+			res+= pq.delMax() + " \n";
+		}
 
 		return  res;
 	}
 
 
-	private static class comp implements Comparator<Integer> {
-
-		@Override
-		public int compare(Integer o1, Integer o2) {
-			return o1.compareTo(o2);
-		}
-	}
 
 
 }
