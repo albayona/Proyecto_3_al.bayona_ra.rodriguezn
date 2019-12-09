@@ -24,6 +24,13 @@ public class MVCModel {
         AManager = new ARequirementsManager();
 
         graph1 = new Graph<>();
+
+
+
+
+    }
+
+    public void  loadData() throws UnexistingVertexException {
         DataLoader  loader = new DataLoader(graph1);
         loader.loadIntersection("./data/bogota_vertices.txt");
         travelTimesTree = new RedBlackTree<>();
@@ -32,8 +39,46 @@ public class MVCModel {
         travelTimesTree = loader.loadTree();
 
         loader.loadEdges("./data/bogota_arcos.txt");
+    }
+
+    public String A1( double longS, double latS, double longD, double latD) throws UnexistingVertexException {
+        return  AManager.A1(graph1, longS, latS, longD, latD);
+
+    }
+
+    public String A3() throws UnexistingVertexException {
+        return  AManager.A3(graph1);
+
+    }
+
+    public String B1( double longS, double latS,double longD,  double latD ) throws UnexistingVertexException {
+        return  BManager.B1(graph1, longS, latS, longD, latD);
+
+    }
+
+    public String B2(  double longS, double latS, double time  ) throws UnexistingVertexException {
+        return  BManager.B2(graph1, longS, latS, time);
+
+    }
+
+    public String B3(  ) throws UnexistingVertexException {
+        return  BManager.B3(graph1);
+
+    }
 
 
+    public String C1(  ) throws UnexistingVertexException, UnexistingEdgeException {
+        return  CManager.C1(graph1, travelTimesTree);
+
+    }
+
+    public String C2(  int origen, int destino,  ) throws UnexistingVertexException {
+        return  CManager.C2(origen, destino, travelTimesTree);
+
+    }
+
+    public String C3(    int origen) throws UnexistingVertexException {
+        return  CManager.C3(origen);
 
     }
 
