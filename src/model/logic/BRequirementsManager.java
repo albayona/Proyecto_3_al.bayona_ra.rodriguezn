@@ -125,7 +125,7 @@ public class BRequirementsManager {
 
         double minDistS = Integer.MAX_VALUE;
 
-        String res = "\n";
+        String res = "\n\n\n\n";
 
 
         for ( VOIntersection v: graph1.getVertices())
@@ -163,7 +163,10 @@ public class BRequirementsManager {
 
         String res ="\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
 
+        long time1 = System.currentTimeMillis();
+
         MSTOnLargestComponent mst = new MSTOnLargestComponent(graph1, new HaversineComparator());
+        long time2 = System.currentTimeMillis();
 
         res+= "Total de vertices en la componente: " + mst.getNumVertices() + "\n";
 
@@ -177,10 +180,15 @@ public class BRequirementsManager {
         res+="\n Costo total: " + mst.totalCost() + "\n";
 
 
+
         for (IEdge e: mst.getEdges()){
 
             res+= e+"\n";
         }
+
+        long tiempoTotal = time2-time1;
+        res+="Tiempo que tarda el algoritmo:" + tiempoTotal+ "\n";
+
 
         JxMapsB3 maps = new JxMapsB3(mst.getMST().edges());
         maps.initFrame("Requerimiento B3");

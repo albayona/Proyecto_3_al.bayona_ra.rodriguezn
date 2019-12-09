@@ -103,18 +103,20 @@ public class CRequirementsManager {
 
             return res;
 }
-
     public String C2(int origen, int destino, RedBlackTree<Integer, RedBlackTree<Integer, LinkedList<TravelTime>>> travelTimesTree) throws UnexistingVertexException {
 
         String res = "";
 
+        long time1 = System.currentTimeMillis();
+
         DijkstraSP shortestPath = new DijkstraSP(graph, origen, 0);
+        long time2 = System.currentTimeMillis();
 
         if (graph.getInfoVertex(origen) != null && graph.getInfoVertex(destino) != null) {
 
             res += "\n Costo total solo a partir del archivo de tiempos: " + calculateMeanTime(origen, destino, travelTimesTree);
 
-             res+= " \n Costo total: " +  shortestPath.distTo(destino) + "\n Camino: \n";
+            res+= " \n Costo total: " +  shortestPath.distTo(destino) + "\n Camino: \n";
 
             if (shortestPath.hasPathTo(destino)) {
                 for (Object o : shortestPath.pathTo(destino)) {
@@ -128,6 +130,10 @@ public class CRequirementsManager {
             else {
                 res+= "No se encontro un camino";
             }
+
+            long tiempoTotal = time2-time1;
+            res+="Tiempo que tarda el algoritmo:" + tiempoTotal+ "\n";
+
         }
 
         JxMapsC2 maps = new JxMapsC2(shortestPath.pathTo(destino));
@@ -136,7 +142,6 @@ public class CRequirementsManager {
 
         return  res;
     }
-
     private double calculateMeanTime(Integer source, Integer destine, RedBlackTree<Integer, RedBlackTree<Integer, LinkedList<TravelTime>>> travelTimesTree){
 
         LinkedList<TravelTime> list = null;
@@ -178,6 +183,7 @@ public class CRequirementsManager {
     public String C3(int origen) throws UnexistingVertexException {
 
         String res = "";
+        long time1 = System.currentTimeMillis();
 
         BFS bfs = new BFS(graph, origen);
 
@@ -187,14 +193,16 @@ public class CRequirementsManager {
 
         for (int i =0; i < bfs.getDistTo().length; i++){
 
-                if (max < bfs.getDistTo()[i]) {
-                    if (bfs.hasPathTo(i)){
+            if (max < bfs.getDistTo()[i]) {
+                if (bfs.hasPathTo(i)){
                     max = bfs.getDistTo()[i] ;
                     vertext = i;
-                    }
                 }
+            }
 
         }
+        long time2 = System.currentTimeMillis();
+
 
         res+= "\n Numero total de arcos: " + max+ "\n Camino: \n";
 
@@ -205,12 +213,16 @@ public class CRequirementsManager {
             list.addAtEnd((VOZone) graph.getInfoVertex(r));
         }
 
+        long tiempoTotal = time2-time1;
+        res+="Tiempo que tarda el algoritmo:" + tiempoTotal+ "\n";
+
         JxMapsC3 maps = new JxMapsC3(list);
         maps.initFrame("Requerimiento C3");
 
 
         return res;
     }
+
 
 
 }

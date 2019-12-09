@@ -119,7 +119,9 @@ public class ARequirementsManager {
 
         String res ="\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
 
+        long time1 = System.currentTimeMillis();
         MSTOnLargestComponentPrim mst = new MSTOnLargestComponentPrim(graph1);
+        long time2 = System.currentTimeMillis();
 
         res+= "Total de vertices en la componente: " + mst.getNumVertices() + "\n";
 
@@ -132,11 +134,12 @@ public class ARequirementsManager {
 
         res+="\n Costo total: " + mst.totalCost() + "\n";
 
-
         for (IEdge e: mst.getEdges()){
 
             res+= e+"\n";
         }
+        long tiempoTotal = time2-time1;
+        res+="Tiempo que tarda el algoritmo:" + tiempoTotal+ "\n";
 
         JxMapsB3 maps = new JxMapsB3(mst.getMST().edges());
         maps.initFrame("Requerimiento A3");

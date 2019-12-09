@@ -15,8 +15,8 @@ public class MVCView
 		System.out.println("5. B2");
 		System.out.println("6. B3");
 		System.out.println("7. C1");
-		System.out.println("8. C2");
-		System.out.println("9. C3");
+		System.out.println("8. C2 (C1 es prerequisito)");
+		System.out.println("9. C3 (C1 es prerequisito)");
 
 
 	}

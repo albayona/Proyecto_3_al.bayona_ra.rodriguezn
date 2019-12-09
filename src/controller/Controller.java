@@ -112,15 +112,26 @@ public class Controller {
 
 				case "A2":
 
-					break;
+//				System.out.println("Determinar	los	n	vértices	con	menor	velocidad	promedio	en	la	ciudad	de	Bogotá");
+//				System.out.println(" \n Ingresar el numero \n");
+//				int nn = 0;
+//				try {
+//					nn = reader.nextInt();
+//				} catch (Exception e) {
+//					System.out.println("Debe ingresar un nï¿½mero");
+//				}
+//				System.out.println(model.A2(nn));
+//				break;
 
-				//================================================================
+					//================================================================
 
 				case "A3":
 
 					System.out.println("Calcular un	árbol de expansión mínima");
+
 					System.out.println(model.A3());
 
+					System.out.println("Tiempo que tarda el algoritmo");
 					break;
 
 
