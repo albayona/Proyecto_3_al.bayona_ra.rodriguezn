@@ -60,7 +60,7 @@ public class BRequirementsManager {
                 res = printPath(iEdges);
 
 
-                maps.JxMapsB1 maps = new maps.JxMapsB1(iEdges);
+                JxMapsB1 maps = new JxMapsB1(iEdges);
                 maps.initFrame("Requerimiento B1");
             } else {
                 res = "No existe tal camino";

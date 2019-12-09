@@ -7,7 +7,7 @@ import model.data_structures.Graphs.UnexistingVertexException;
 
 public class TripsManagerView
 {
-	public static void main(String[] args) throws UnexistingVertexException {
+	public static void main(String[] args)  {
 		Scanner sc = new Scanner(System.in);
 		boolean fin=false;
 
