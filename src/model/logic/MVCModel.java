@@ -72,7 +72,7 @@ public class MVCModel {
 
     }
 
-    public String C2(  int origen, int destino,  ) throws UnexistingVertexException {
+    public String C2(  int origen, int destino ) throws UnexistingVertexException {
         return  CManager.C2(origen, destino, travelTimesTree);
 
     }

@@ -11,111 +11,253 @@ import model.logic.MVCModel;
 import model.vo.TripleCostEdge;
 
 import model.data_structures.HashTables.HashTable;
+import view.MVCView;
+
+import java.util.Scanner;
 
 
 public class Controller {
 
-    /**
-     * Reference to the services manager
-     */
 
-    private  MVCModel model;
+
+	private MVCModel model;
+
+
+	private MVCView view;
 
 
 	public Controller() throws UnexistingVertexException {
-		this.model = new MVCModel();
+		model = new MVCModel();
+		view = new MVCView();
 	}
 
-	public static void loadGraph(){
 
-	}
+	public void run() throws UnexistingVertexException {
 
-    public  void saveGraphIntoJSON() {
-        JSONDataManager jsonMa = new JSONDataManager();
-        jsonMa.saveGraphIntoJSON("./data/grafoDefinitivo.json", model.getGraph1());
-    }
-
-    public  void loadGraphFromJSON() {
-        JSONDataManager jsonMa = new JSONDataManager();
-        jsonMa.loadGraphFromJSON("./data/grafoDefinitivo.json", model.getGraph1());
-    }
-
-    public  String B1(double longS,
-                     double latS,
-                     double longD,
-                     double latD) {
-
-        String res = "";
-        try {
-            res = model.getBManager().B1(model.getGraph1(), longS, latS, longD, latD);
-        } catch (Exception e) {
-
-        }
-        return res;
+		Scanner reader = new Scanner(System.in);
+		boolean stop = false;
 
 
-    }
+		int N = -1;
 
-    public   String B2(double longS,
-                     double latS,
+		double latitute = -1;
+		double longitute = -1;
 
-                     double time) {
+		double lo = -1;
+		double hi = -1;
 
-        String res = "";
-        try {
-            res = model.getBManager().B2(model.getGraph1(), longS, latS, time);
-        } catch (Exception e) {
-
-        }
-        return res;
+		int zone = -1;
+		int hour = -1;
 
 
-    }
 
-	public  String B3() {
+		while (!stop) {
+			view.printMenu();
 
-		String res = "";
-		try {
-			res = model.getBManager().B3(model.getGraph1());
-		} catch (Exception e) {
+			String option = String.valueOf(reader.next());
 
+			switch (option) {
+				case "1":
+
+					model.loadData();
+
+					break;
+
+				case "A1":
+					System.out.println(" \n Ingresar cantidad de letras mas frecuentes a mostrar: \n");
+
+					try {
+						N = reader.nextInt();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					System.out.println(model.A1());
+
+					break;
+
+
+				case "A2":
+					System.out.println(" \n Ingresar longitud: \n");
+
+					try {
+						longitute = reader.nextDouble();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					System.out.println(" \n Ingresar latitud: \n");
+
+					try {
+						latitute = reader.nextDouble();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					printListA2(model.A2(latitute,longitute));
+
+
+					break;
+
+				case "A3":
+					System.out.println(" \n Ingresar tiempo inferior: \n");
+
+					try {
+						lo = reader.nextDouble();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					System.out.println(" \n Ingresar tiempo superior: \n");
+
+					try {
+						hi = reader.nextDouble();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					printArrA3(model.A3(lo,hi));
+
+					break;
+
+
+				case "B1":
+					System.out.println(" \n Ingresar cantidad a mostrar: \n");
+
+					try {
+						N = reader.nextInt();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					printArrayB1(model.B1(N));
+
+					break;
+
+				case "B2":
+
+
+					System.out.println(" \n Ingresar longitud: \n");
+
+					try {
+						longitute = reader.nextDouble();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					System.out.println(" \n Ingresar latitud: \n");
+
+					try {
+						latitute = reader.nextDouble();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+
+					printListB2(model.B2(latitute,longitute));
+
+
+					break;
+
+
+				case "B3":
+					System.out.println(" \n Ingresar desviacion inferior: \n");
+
+
+					try {
+						lo = reader.nextDouble();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					System.out.println(" \n Ingresar desviacion superior: \n");
+
+					try {
+						hi = reader.nextDouble();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					printArrB3(model.B3(lo,hi));
+
+					break;
+
+				case "C1":
+					System.out.println(" \n Ingresar zona de origen: \n");
+
+					try {
+						zone = reader.nextInt();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					System.out.println(" \n Ingresar una hora: \n");
+
+					try {
+						hour = reader.nextInt();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					printListC2(model.C1(zone,hour));
+
+					break;
+
+
+				case "C2":
+					System.out.println(" \n Ingresar zona de destino: \n");
+
+					try {
+						zone = reader.nextInt();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					System.out.println(" \n Ingresar hora inferior: \n");
+
+					try {
+						lo = reader.nextInt();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					System.out.println(" \n Ingresar hora superior: \n");
+
+					try {
+						hi = reader.nextInt();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					printListC2(model.C2(zone,(int)lo,(int)hi));
+
+					break;
+
+				case "C3":
+
+					System.out.println(" \n Ingresar cantidad zonas a mostrar: \n");
+
+					try {
+						N = reader.nextInt();
+					} catch (Exception e) {
+						System.out.println("Debe ingresar un n�mero");
+					}
+
+					printArrC3(model.C3(N));
+
+					break;
+
+				case "C4":
+
+					System.out.println(model.C4());
+
+					break;
+
+				default: {
+					System.out.println("Opcion invalida");
+				}
+			}
 		}
-		return res;
-
-
-	}
-
-	public  String C1() {
-
-		String res = "";
-		try {
-			res = model.getCManager().C1(model.getGraph1(), model.getTravelTimesTree());
-		} catch (Exception e) {
-
-		}
-		return res;
-
-
-	}
-
-	public  String C2(int origen, int destino) {
-
-		String res = "";
-		try {
-			res = model.getCManager().C2(origen, destino, model.getTravelTimesTree());
-		} catch (Exception e) {
-
-		}
-		return res;
-
-
-	}
-
-	public  String C3(int origen) throws UnexistingVertexException {
-
-		return model.getCManager().C3(origen);
-
-
 	}
 
 
