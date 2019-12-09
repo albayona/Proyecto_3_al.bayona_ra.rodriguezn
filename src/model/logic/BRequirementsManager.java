@@ -148,8 +148,7 @@ public class BRequirementsManager {
                 list.addLast(shortestPath.getVertex(i));
                 }
 
-                System.out.print(i);
-                System.out.print(shortestPath.distTo(i) );
+                System.out.print(shortestPath.distTo(i)+"\n" );
             }
 
         JxMapsB2 maps = new JxMapsB2(list);
