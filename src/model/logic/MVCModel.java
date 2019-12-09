@@ -104,8 +104,8 @@ public class MVCModel {
 
         double a = 0.0;
 
-        System.out.print(model.CManager.C1(model.graph1, model.travelTimesTree));
-      System.out.print(model.CManager.C3(10));
+        System.out.print(model.A1());
+        System.out.print(model.);
 
 
 
