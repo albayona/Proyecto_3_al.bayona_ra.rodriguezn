@@ -7,6 +7,7 @@ import model.algorithms.MSTOnLargestComponent;
 import model.algorithms.MSTOnLargestComponentPrim;
 import model.data_structures.Graphs.Graph;
 import model.data_structures.Graphs.UnexistingVertexException;
+import model.data_structures.Lists.DoublyLinkedList;
 import model.data_structures.Lists.Stack;
 import model.data_structures.MinHeap.MinHeap;
 import model.utils.HaversineComparator;
@@ -160,14 +161,22 @@ public class ARequirementsManager {
             }
             double prom = sum / count;
 
-            Pair<Double, VOIntersection> pair = new Pair<>(prom, a)
+            Pair<Double, VOIntersection> pair = new Pair<>(prom, a);
 
             min.add(pair);
         }
 
+        DoublyLinkedList<VOIntersection> list = new DoublyLinkedList<>();
         for (int i =0; i< n;i++){
 
+            Pair<Double, VOIntersection> p  = min.min();
+            list.addLast(p.getValue());
+        res+= p.toString() + "\n";
         }
+
+
+
+        return  res;
     }
 
     private class Compare implements Comparator<Pair<Double, VOIntersection>> {
