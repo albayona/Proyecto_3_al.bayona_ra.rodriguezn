@@ -236,7 +236,7 @@ public class DataLoader {
         CSVReader reader = null;
         try {
 
-            reader = new CSVReader(new FileReader("./data/bogota-cadastral-2018-1-WeeklyAggregate2.csv"));
+            reader = new CSVReader(new FileReader("./data/bogota-cadastral-2018-1-WeeklyAggregate.csv"));
 
             Iterator iter = reader.iterator();
 
