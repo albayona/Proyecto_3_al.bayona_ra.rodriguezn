@@ -102,10 +102,10 @@ public class MVCModel {
 
         MVCModel model = new MVCModel();
 
-        double a = 0.0;
+        model.loadData();
 
-        System.out.print(model.A1());
-        System.out.print(model.);
+        System.out.print(model.A1( -74.08921298299998,4.582989396000016,
+                -74.08952746199999,4.58256096600001));
 
 
 
