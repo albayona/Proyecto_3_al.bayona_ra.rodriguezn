@@ -18,30 +18,29 @@ public class Controller {
     /**
      * Reference to the services manager
      */
-    @SuppressWarnings("unused")
-    private static MVCModel model;
+
+    private  MVCModel model;
 
 
-    public static void loadGraph(){
-		try {
-			model = new MVCModel();
-		} catch (UnexistingVertexException e) {
-			e.printStackTrace();
-		}
+	public Controller() throws UnexistingVertexException {
+		this.model = new MVCModel();
+	}
+
+	public static void loadGraph(){
 
 	}
 
-    public static void saveGraphIntoJSON() {
+    public  void saveGraphIntoJSON() {
         JSONDataManager jsonMa = new JSONDataManager();
         jsonMa.saveGraphIntoJSON("./data/grafoDefinitivo.json", model.getGraph1());
     }
 
-    public static void loadGraphFromJSON() {
+    public  void loadGraphFromJSON() {
         JSONDataManager jsonMa = new JSONDataManager();
         jsonMa.loadGraphFromJSON("./data/grafoDefinitivo.json", model.getGraph1());
     }
 
-    public static String B1(double longS,
+    public  String B1(double longS,
                      double latS,
                      double longD,
                      double latD) {
@@ -57,7 +56,7 @@ public class Controller {
 
     }
 
-    public static  String B2(double longS,
+    public   String B2(double longS,
                      double latS,
 
                      double time) {
@@ -73,7 +72,7 @@ public class Controller {
 
     }
 
-	public static String B3() {
+	public  String B3() {
 
 		String res = "";
 		try {
@@ -86,7 +85,7 @@ public class Controller {
 
 	}
 
-	public static String C1() {
+	public  String C1() {
 
 		String res = "";
 		try {
@@ -99,7 +98,7 @@ public class Controller {
 
 	}
 
-	public static String C2(int origen, int destino) {
+	public  String C2(int origen, int destino) {
 
 		String res = "";
 		try {
@@ -112,15 +111,9 @@ public class Controller {
 
 	}
 
-	public static String C3(int origen) {
+	public  String C3(int origen) throws UnexistingVertexException {
 
-		String res = "";
-		try {
-			res = model.getCManager().C3(origen);
-		} catch (Exception e) {
-
-		}
-		return res;
+		return model.getCManager().C3(origen);
 
 
 	}

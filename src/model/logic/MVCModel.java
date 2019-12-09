@@ -13,6 +13,7 @@ public class MVCModel {
 
     private  BRequirementsManager BManager;
     private CRequirementsManager CManager;
+    private ARequirementsManager AManager;
     RedBlackTree<Integer, RedBlackTree<Integer, LinkedList<TravelTime>>> travelTimesTree;
 
     private Graph<Integer, VOIntersection, TripleCostEdge> graph1;
@@ -20,6 +21,7 @@ public class MVCModel {
     public MVCModel() throws UnexistingVertexException {
         BManager = new BRequirementsManager();
         CManager = new CRequirementsManager();
+        AManager = new ARequirementsManager();
 
         graph1 = new Graph<>();
         DataLoader  loader = new DataLoader(graph1);

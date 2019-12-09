@@ -7,7 +7,11 @@ import model.data_structures.Graphs.UnexistingVertexException;
 
 public class TripsManagerView
 {
-	public static void main(String[] args)  {
+
+
+	public static void main(String[] args) throws UnexistingVertexException {
+		Controller Controller = new Controller();
+
 		Scanner sc = new Scanner(System.in);
 		boolean fin=false;
 
@@ -151,15 +155,17 @@ public class TripsManagerView
 						break;
 
 					case 8:
+						System.out.print("---------");
 						System.out.println(" \n Ingresar origen: \n");
 
 						try {
 							n = sc.nextInt();
+							System.out.print(n);
 						} catch (Exception e) {
 							System.out.println("Debe ingresar un n�mero");
 						}
 
-						System.out.print(Controller.C3(n));
+						System.out.println(Controller.C3(n));
 						break;
 
 
