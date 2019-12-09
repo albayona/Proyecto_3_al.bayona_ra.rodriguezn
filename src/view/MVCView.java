@@ -7,7 +7,7 @@ public class MVCView
 
 
 	public void printMenu() {
-		System.out.println("0. Cargar mundo");
+		System.out.println("0. Cargar mundo (escriba 1)");
 		System.out.println("1. A1");
 		System.out.println("2. A2");
 		System.out.println("3. A3");

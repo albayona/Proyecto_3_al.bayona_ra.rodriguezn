@@ -75,17 +75,17 @@ public class DataLoader {
             e.printStackTrace();
         }
 
-//       for (int i = 0; i < 228045; i++){
-//
-//           if (!graph1.hasVertex(i)){
-//
-//               VOIntersection newV =  new VOIntersection(i, -74, 4, -1);
-//
-//
-//               graph1.addVertex(i, newV);
-//           }
-//
-//       }
+       for (int i = 0; i < 228045; i++){
+
+           if (!graph1.hasVertex(i)){
+
+               VOIntersection newV =  new VOIntersection(i, -74, 4, -1);
+
+
+               graph1.addVertex(i, newV);
+           }
+
+       }
  }
 
 
