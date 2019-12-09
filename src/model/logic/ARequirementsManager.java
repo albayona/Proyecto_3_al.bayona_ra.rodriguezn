@@ -1,16 +1,19 @@
 package model.logic;
 
 import api.IEdge;
+import javafx.util.Pair;
 import model.algorithms.DijkstraSP;
 import model.algorithms.MSTOnLargestComponent;
 import model.algorithms.MSTOnLargestComponentPrim;
 import model.data_structures.Graphs.Graph;
 import model.data_structures.Graphs.UnexistingVertexException;
 import model.data_structures.Lists.Stack;
+import model.data_structures.MinHeap.MinHeap;
 import model.utils.HaversineComparator;
 import model.vo.TripleCostEdge;
 import model.vo.VOIntersection;
 
+import java.util.Comparator;
 import java.util.Iterator;
 
 public class ARequirementsManager {
@@ -141,6 +144,42 @@ public class ARequirementsManager {
 
     }
 
+    public String A2(Graph<Integer, VOIntersection, TripleCostEdge> graph1, int n) throws UnexistingVertexException {
+
+        String res= "\n";
+        MinHeap<Pair<Double, VOIntersection>> min = new MinHeap(new Compare());
+
+        for (VOIntersection a : graph1.getVertices()) {
+
+            double sum = 0;
+            double count = 0;
+
+            for (IEdge ac : graph1.adjEdges(a.getId())) {
+                count++;
+                sum += ac.weight(2);
+            }
+            double prom = sum / count;
+
+            Pair<Double, VOIntersection> pair = new Pair<>(prom, a)
+
+            min.add(pair);
+        }
+
+        for (int i =0; i< n;i++){
+
+        }
+    }
+
+    private class Compare implements Comparator<Pair<Double, VOIntersection>> {
+
+
+        @Override
+        public int compare(Pair<Double, VOIntersection> o1, Pair<Double, VOIntersection> o2) {
+            if (o1.getKey() < o2.getKey() ) return -1;
+            if (o1.getKey()  > o2.getKey() ) return 1;
+            else return 0;
+        }
+    }
 
 
 }
