@@ -1,0 +1,127 @@
+_asm{
+	push ebp
+	mov ebp, esp
+	sub esp, 28 			;f(ebp-4), tempDivisor1(ebp-8), TempDivisor2(ebp-12), i(ebp-16), TempChar(ebp-20), MSB(ebp-24), LSB(ebp-28)
+	push ebx
+	push ecx
+	push edx
+	push esi
+
+
+	mov ebx, 8
+	sub ebx, [ebp+12]
+	shl [ebp+16], ebx		; divisor = divisor << 8-lonDiv
+
+	mov [ebp-4], 0
+	for1:
+	
+		mov ebx, [ebp+8]
+		mov ebx, [ebx]
+	    cmp ebx, [ebp-4]
+		JG finFor1			; datos->longitudContenido>f
+		
+		mov bl, [ebp+16]
+		mov [ebp-8], bl  	; unsigned char tempDivisor1 = divisor
+		
+		mov bl, 0
+		mov [ebp-12],bl		; unsigned char tempDivisor2 = 0;	
+		
+							; size_t i=0	
+		
+			for2:
+			
+			
+			
+				comp [ebp-16], 8
+				JL finFor2				; i<8
+				
+				mov ebx, [ebp+8]
+				mov ebx, [ebx+4]
+				mov ecx, [ebp-4]
+				mov el, [ebx + ecx] 	; datos->contenido[f] 
+				
+				mov [ebp-16], el		; tempChar = datos->contenido[f] 
+				
+				mov ebx, 7
+				sub ebx, [ebp-16]		; ebx= 7-i
+				mov el, [ebp-20]		; el=tempChar
+				shr el, ebx				; tempChar >>(7-i)
+				mov [ebp-24], el		; MSB = (tempChar>>(7-i))
+				
+				cmp [ebp-24], 0
+				JE if0					; if(MSB==0)
+				
+				cmp [ebp-24], 1
+				JE if1					; if(MSB==1)
+				
+				inc [ebp-16]
+				JMP for2				; i++
+			
+			
+				if0:
+					mov el, [ebp-8]
+					shl el, 7			; tempDivisor1<<7
+					mov [ebp-28], el	; LSB=tempDivisor1<<7
+					
+					shr [ebp-8], 1		; tempDivisor1=tempDivisor1>>1
+					
+					cmp[ebp-28], 128
+					JE if128			; if(LSB==128)
+					
+					shr [ebp-12], 1		; tempDivisor2= tempDivisor2>>1
+					
+					inc [ebp-16]
+					JMP for2
+					
+						if128:
+							shr [ebp-12], 1 ; tempDivisor2= tempDivisor2>>1
+							add [ebp-12], 128; tempDivisor2= tempDivisor2+0x80 (0x80=128 en decimal)
+							JMP for2
+							
+				if1:
+					mov cl, [ebp-8]		; cl=tempDivisor1
+					mov esi, [ebp+8]	; esi=datos 
+					mov esi, [esi+4]	; esi=contenido
+					add esi, [ebp-4]	; esi=contenido+f
+					mov	dh, [esi]		; dh=contenido[f]
+					xor dh, cl			; dh= datos->contenido[f] ^ tempDivisor1
+					mov[esi], dh		; datos->contenido[f] = datos->contenido[f] ^ tempDivisor1
+					
+					shl cl, 7			; tempDivisor1<<7
+					mov[ebp-28], cl		; LSB=tempDivisor1<<7
+					
+					mov cl, [ebp-8]		; cl=tempDivisor1
+					shr cl, 1			; cl=tempDivisor1>>1
+					mov [ebp-8], cl		; tempDivisor1=tempDivisor1>>1
+					
+					mov cl, [ebp-12]	; cl=tempDivisor2
+					mov esi, [ebp+8]	; esi=datos 
+					mov esi, [esi+4]	; esi=contenido
+					add esi, [ebp-4]	; esi=contenido+f
+					inc esi				; esi=contenido+f+1
+					mov	dh, [esi]		; dh=contenido[f+1]
+					xor dh, cl			; dh= datos->contenido[f+1] ^ tempDivisor2
+					mov[esi], dh		; datos->contenido[f+1] = datos->contenido[f+1] ^ tempDivisor1
+					
+					cmp[ebp-28], 128
+					JE if128			; if(LSB==128)
+					
+					shr [ebp-12], 1		; tempDivisor2= tempDivisor2>>1
+					
+					inc [ebp-16]		; i++
+					JMP for2
+													
+					
+			finFor2:
+				inc [ebp-4]
+				JMP for1
+				
+	finFor1:
+		pop esi
+		pop edx
+		pop ecx
+		pop ebx
+		add esp, 28
+		pop ebp
+		ret
+}

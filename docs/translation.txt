@@ -1,0 +1,195 @@
+﻿/**
+ * Calcula el CRC de la información almacenada en la estructura del archivo leído. Este se calcula
+ * sobre el apuntador de contenido (datos->contenido) de la estructura del parámetro y
+ * DEBE dejar el byte con el CRC calculado en el último byte que ya se adicionó al final de dicho apuntador.
+ * PARÁMETROS:
+ * "datos" El apuntador a la estructura que almacena todo lo necesario para calcular el CRC
+ * "lonDiv" El número de bits del divisor de entrada ingresado al programa
+ * "divisor" El divisor a utilizar ya en su forma de caracter correspondiente a la entrada de unos y ceros
+ **/
+void calcularCRC(Informacion* datos, int lonDiv, unsigned char divisor) {
+001B1850  push        ebp  
+001B1851  mov         ebp,esp  
+001B1853  sub         esp,114h  
+001B1859  push        ebx  
+001B185A  push        esi  
+001B185B  push        edi  
+001B185C  lea         edi,[ebp+FFFFFEECh]  
+001B1862  mov         ecx,45h  
+001B1867  mov         eax,0CCCCCCCCh  
+001B186C  rep stos    dword ptr es:[edi]  
+001B186E  mov         ecx,1BC009h  
+001B1873  call        001B1235  
+
+	divisor = divisor << 8 - lonDiv;
+001B1878  movzx       eax,byte ptr [ebp+10h]  
+001B187C  mov         ecx,8  
+001B1881  sub         ecx,dword ptr [ebp+0Ch]  
+001B1884  shl         eax,cl  
+001B1886  mov         byte ptr [ebp+10h],al  
+	unsigned char tempDivisor1;
+	unsigned char tempDivisor2;
+	unsigned char  tempChar;
+	unsigned char  MSB;
+	unsigned char  LSB;
+
+	//se pasan los ceros de relleno al final del polinomio generador
+
+	for (int f = 0; datos->longitudContenido > f; f++)					//se recorre cada char (byte) del archivo
+001B1889  mov         dword ptr [ebp-44h],0  
+001B1890  jmp         001B189B  
+001B1892  mov         eax,dword ptr [ebp-44h]  
+001B1895  add         eax,1  
+001B1898  mov         dword ptr [ebp-44h],eax  
+001B189B  mov         eax,dword ptr [ebp+8]  
+001B189E  mov         ecx,dword ptr [eax]  
+001B18A0  cmp         ecx,dword ptr [ebp-44h]  
+001B18A3  jle         001B19C6  
+	{
+
+		//el polinomio generador se parte en dos bytes
+
+		tempDivisor1 = divisor;							 // este se utiliza para representar un polinomio con el que se aplica xor al char actual, 
+001B18A9  mov         al,byte ptr [ebp+10h]  
+001B18AC  mov         byte ptr [ebp-5],al  
+																		//a meduda que el polinomio generador se vaya moviendo a la derecha; orginalmente es el mismo polinomio generado
+		tempDivisor2 = 0;									 // este se utiliza para representar un polinomio que es la parte que se ha movido a la derecha del polinomio generador; 
+001B18AF  mov         byte ptr [ebp-11h],0  
+																		//con el cual se aplica xor al char siguiente al actual; originalmente es 0;
+
+		for (size_t i = 0; i < 8; i++)									//se recorre cada bit del char (byte) actual y su contiguo
+001B18B3  mov         dword ptr [ebp-50h],0  
+001B18BA  jmp         001B18C5  
+001B18BC  mov         eax,dword ptr [ebp-50h]  
+001B18BF  add         eax,1  
+001B18C2  mov         dword ptr [ebp-50h],eax  
+001B18C5  cmp         dword ptr [ebp-50h],8  
+001B18C9  jae         001B19C1  
+		{
+			tempChar = datos->contenido[f];
+001B18CF  mov         eax,dword ptr [ebp+8]  
+001B18D2  mov         ecx,dword ptr [eax+4]  
+001B18D5  mov         edx,dword ptr [ebp-44h]  
+001B18D8  mov         al,byte ptr [ecx+edx]  
+001B18DB  mov         byte ptr [ebp-1Dh],al  
+
+			MSB = (tempChar >> (7 - i));					// se aisla el bit mas significativo del char actual;
+001B18DE  movzx       eax,byte ptr [ebp-1Dh]  
+001B18E2  mov         ecx,7  
+001B18E7  sub         ecx,dword ptr [ebp-50h]  
+001B18EA  sar         eax,cl  
+001B18EC  mov         byte ptr [ebp-29h],al  
+
+			if (MSB == 0) {												// si el bit mas significativo del char actual es 0 entonces no se efectua xor y se actualizan los dos polinomios auxiliares:
+001B18EF  movzx       eax,byte ptr [ebp-29h]  
+001B18F3  test        eax,eax  
+001B18F5  jne         001B1935  
+
+				LSB = (tempDivisor1 << 7);				//pasandolo al inicio de un byte, se aisla el bit menos significativo , que va formar parte del inicio del polinomio auxiliar 2
+001B18F7  movzx       eax,byte ptr [ebp-5]  
+001B18FB  shl         eax,7  
+001B18FE  mov         byte ptr [ebp-35h],al  
+
+				tempDivisor1 = tempDivisor1 >> 1;						// Se actualiza el polinomio 1 desplzandolo a la derecha 
+001B1901  movzx       eax,byte ptr [ebp-5]  
+001B1905  sar         eax,1  
+001B1907  mov         byte ptr [ebp-5],al  
+
+				if (LSB == 128) {										// Si el bit menos significativo es 1, entonces se le agrega el bit 1 al comienzo del polinomio 2
+001B190A  movzx       eax,byte ptr [ebp-35h]  
+001B190E  cmp         eax,80h  
+001B1913  jne         001B192C  
+					tempDivisor2 = tempDivisor2 >> 1;
+001B1915  movzx       eax,byte ptr [ebp-11h]  
+001B1919  sar         eax,1  
+001B191B  mov         byte ptr [ebp-11h],al  
+					tempDivisor2 = tempDivisor2 + 0x80;
+001B191E  movzx       eax,byte ptr [ebp-11h]  
+001B1922  add         eax,80h  
+001B1927  mov         byte ptr [ebp-11h],al  
+				}
+				else {													// Si el bit menos significativo es 0, entonces se agrega el bit 0 al comienzo del polinomio 2
+001B192A  jmp         001B1935  
+					tempDivisor2 = tempDivisor2 >> 1;
+001B192C  movzx       eax,byte ptr [ebp-11h]  
+001B1930  sar         eax,1  
+001B1932  mov         byte ptr [ebp-11h],al  
+				}
+			}
+
+			if (MSB == 1) {												// si el bit mas significativo del char actual es 1 entonces se efectua xor y se actualizan los dos polinomios auxiliares:
+001B1935  movzx       eax,byte ptr [ebp-29h]  
+001B1939  cmp         eax,1  
+001B193C  jne         001B19BC  
+
+				datos->contenido[f] = datos->contenido[f] ^ tempDivisor1; // se efectua xor con el polinomio 1 y el char actual
+001B193E  mov         eax,dword ptr [ebp+8]  
+
+				datos->contenido[f] = datos->contenido[f] ^ tempDivisor1; // se efectua xor con el polinomio 1 y el char actual
+001B1941  mov         ecx,dword ptr [eax+4]  
+001B1944  mov         edx,dword ptr [ebp-44h]  
+001B1947  movzx       eax,byte ptr [ecx+edx]  
+001B194B  movzx       ecx,byte ptr [ebp-5]  
+001B194F  xor         eax,ecx  
+001B1951  mov         edx,dword ptr [ebp+8]  
+001B1954  mov         ecx,dword ptr [edx+4]  
+001B1957  mov         edx,dword ptr [ebp-44h]  
+001B195A  mov         byte ptr [ecx+edx],al  
+
+				LSB = (tempDivisor1 << 7);				 //pasandolo al inicio de un byte, se aisla el bit menos significativo , que va formar parte del inicio del polinomio auxiliar 2
+001B195D  movzx       eax,byte ptr [ebp-5]  
+001B1961  shl         eax,7  
+001B1964  mov         byte ptr [ebp-35h],al  
+				tempDivisor1 = tempDivisor1 >> 1;						 // Se actualiza el polinomio 1 desplzandolo a la derecha 
+001B1967  movzx       eax,byte ptr [ebp-5]  
+001B196B  sar         eax,1  
+001B196D  mov         byte ptr [ebp-5],al  
+
+				datos->contenido[f + 1] = datos->contenido[f + 1] ^ tempDivisor2; // se efectua xor con el polinomio 2 y el char siguiente al actual
+001B1970  mov         eax,dword ptr [ebp+8]  
+001B1973  mov         ecx,dword ptr [eax+4]  
+001B1976  mov         edx,dword ptr [ebp-44h]  
+001B1979  movzx       eax,byte ptr [ecx+edx+1]  
+001B197E  movzx       ecx,byte ptr [ebp-11h]  
+001B1982  xor         eax,ecx  
+001B1984  mov         edx,dword ptr [ebp+8]  
+001B1987  mov         ecx,dword ptr [edx+4]  
+001B198A  mov         edx,dword ptr [ebp-44h]  
+001B198D  mov         byte ptr [ecx+edx+1],al  
+
+
+				if (LSB == 128) {										// Si el bit menos significativo es 1, entonces se  agrega el bit 1 al comienzo del polinomio 2
+001B1991  movzx       eax,byte ptr [ebp-35h]  
+001B1995  cmp         eax,80h  
+001B199A  jne         001B19B3  
+					tempDivisor2 = tempDivisor2 >> 1;
+001B199C  movzx       eax,byte ptr [ebp-11h]  
+001B19A0  sar         eax,1  
+001B19A2  mov         byte ptr [ebp-11h],al  
+					tempDivisor2 = tempDivisor2 + 0x80;
+001B19A5  movzx       eax,byte ptr [ebp-11h]  
+001B19A9  add         eax,80h  
+001B19AE  mov         byte ptr [ebp-11h],al  
+
+				}
+				else {
+001B19B1  jmp         001B19BC  
+					tempDivisor2 = tempDivisor2 >> 1;					// Si el bit menos significativo es 0, entonces se  agrega el bit 0 al comienzo del polinomio 2
+001B19B3  movzx       eax,byte ptr [ebp-11h]  
+					tempDivisor2 = tempDivisor2 >> 1;					// Si el bit menos significativo es 0, entonces se  agrega el bit 0 al comienzo del polinomio 2
+001B19B7  sar         eax,1  
+001B19B9  mov         byte ptr [ebp-11h],al  
+
+				}
+
+
+			}
+
+		}
+001B19BC  jmp         001B18BC  
+
+		// TODO: Esta función se debe realizar completamente. LEA BIEN LA GUÍA Y LA DOCUMENTACIÓN.
+
+	}
+001B19C1  jmp         001B1892  
+}
