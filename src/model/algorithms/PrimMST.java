@@ -3,6 +3,7 @@ package model.algorithms;
 import api.IEdge;
 import model.data_structures.Graphs.Graph;
 import model.data_structures.Graphs.UnexistingVertexException;
+import model.data_structures.HashTables.HashTable;
 import model.data_structures.Lists.Queue;
 import model.data_structures.MinHeapIndexed.IndexMinPQ;
 
@@ -19,7 +20,7 @@ public class PrimMST {
      * Compute a minimum spanning tree (or forest) of an edge-weighted graph.
      * @param G the edge-weighted graph
      */
-    public PrimMST(Graph G, int weightIndex) throws UnexistingVertexException {
+    public PrimMST(Graph G, int weightIndex, HashTable<Integer, Integer> inComponent) throws UnexistingVertexException {
         this.weightIndex = weightIndex;
         edgeTo = new IEdge[G.V()];
         distTo = new double[G.V()];
@@ -29,16 +30,19 @@ public class PrimMST {
             distTo[v] = Double.POSITIVE_INFINITY;
 
         for (int v = 0; v < G.V(); v++)      // run from each vertex to find
-            if (!marked[v]) prim(G, v);      // minimum spanning forest
+
+            if (!marked[v] && inComponent.containsKey(v)) prim(G, v, inComponent);      // minimum spanning forest
 
     }
 
     // run Prim's algorithm in graph G, starting from vertex s
-    private void prim(Graph G, int s) throws UnexistingVertexException {
+    private void prim(Graph G, int s, HashTable<Integer, Integer> inComponent) throws UnexistingVertexException {
         distTo[s] = 0.0;
         pq.insert(s, distTo[s]);
         while (!pq.isEmpty()) {
             int v = pq.delMin();
+
+            if (inComponent.containsKey(v))
             scan(G, v);
         }
     }

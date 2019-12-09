@@ -32,7 +32,7 @@ public class MSTOnLargestComponentPrim {
 
         cc = null;
 
-        MST = new PrimMST(G,  0);
+        MST = new PrimMST(G,  0, inComponent);
 
         System.out.print(">>>>>>>>>>>>");
     }
